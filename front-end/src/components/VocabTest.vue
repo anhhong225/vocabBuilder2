@@ -40,11 +40,12 @@
     },
     data() {
       return {
-        randWords: [...this.words.sort(() => 0.5 - Math.random())],
+        randWords: [...this.words.slice().sort(() => 0.5 - Math.random())],
         incorrectGuesses: [],
         result: '',
         resultClass: '',
         english: '',
+        vietnam:'',
         score: 0,
         testOver: false
       };
@@ -56,11 +57,11 @@
     },
     methods: {
       onSubmit: function() {
-        if (this.english === this.currWord.english) {
+        if (this.english.toLowerCase() === this.currWord.english) {
           this.flash('Correct!', 'success', { timeout: 1000 });
           this.score += 1;
         } 
-        else if (this.vietnam === this.currWord.vietnam) {
+        else if (this.vietnam.toLowerCase() === this.currWord.vietnam) {
           this.flash('Correct!', 'success', { timeout: 1000 });
           this.score += 1;
         }else {
