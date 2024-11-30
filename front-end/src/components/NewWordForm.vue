@@ -1,7 +1,6 @@
 <template>
   <form action="#" @submit.prevent="onSubmit">
     <p v-if="errorsPresent" class="error">Please fill out all required fields!</p>
-
     <!-- Default Language Fields -->
     <div class="ui labeled input fluid">
       <div class="ui label">
@@ -26,20 +25,13 @@
 
     <!-- Dynamically Added Language Fields -->
     <div
-      class="ui labeled input fluid"
-      v-for="(label, lang) in additionalLanguages"
-      :key="lang"
-      style="position:relative;"
-    >
-      <div class="ui label">
+      class="ui labeled input fluid" v-for="(label, lang) in additionalLanguages"
+      :key="lang" style="position:relative;"> <!-- Loop through dynamically added languages -->
+      <div class="ui label"><!-- Display flag-->
         <i :class="languageFlags[lang] + ' flag'"></i> {{ capitalize(label) }}
-      </div>
-      <input
-        type="text"
-        :placeholder="'Enter word in ' + capitalize(label)"
-        v-model="word[lang]"
-      />
-      <span class="remove-text" @click="removeLanguage(lang)">remove</span>
+      </div><!-- Input field for each language -->
+      <input type="text" :placeholder="'Enter word in ' + capitalize(label)" v-model="word[lang]"/> <!--Two-way binding with the `word` object-->
+      <span class="remove-text" @click="removeLanguage(lang)">remove</span> <!--click text to remove-->
     </div>
 
     <!-- Language selection dropdown -->
@@ -47,14 +39,10 @@
       <input type="hidden" name="language" />
       <i class="dropdown icon"></i>
       <div class="default text">Select Language</div>
-      <div class="menu" v-show="dropdownOpen">
-        <div
-          class="item"
-          v-for="(flag, lang) in allLanguages"
-          :key="lang"
-          v-if="!word[lang]"
-          @click="addLanguage(lang)"
-        >
+      <div class="menu" v-show="dropdownOpen"><!-- Show menu only if `dropdownOpen` is true -->
+        <!-- Loop through all available languages -->
+        <div class="item" v-for="(flag, lang) in allLanguages" 
+          :key="lang" v-if="!word[lang]" @click="addLanguage(lang)"><!-- Only show languages not already added -->
           <i :class="languageFlags[lang] + ' flag'"></i> {{ capitalize(lang) }}
         </div>
       </div>
@@ -66,12 +54,12 @@
 
 <script>
 export default {
-  name: "new-word-form",
+  name: "word-form",//component name
   props: {
     word: {
       type: Object,
-      required: false,
-      default: () => ({
+      required: false, 
+      default: () => ({// Default languages with empty values
         english: "",
         german: "",
         vietnamese: ""
@@ -81,7 +69,7 @@ export default {
   data() {
     return {
       errorsPresent: false,
-      dropdownOpen: false,
+      dropdownOpen: false, //tracking dropdown visibility
       additionalLanguages: {}, // Store dynamically added languages
       allLanguages: {
         // All available languages
@@ -107,40 +95,40 @@ export default {
     // Populate additionalLanguages dynamically from the word prop
     for (const lang in this.word) {
       if (!(lang === "english" || lang === "german" || lang === "vietnamese")) {
-        this.$set(this.additionalLanguages, lang, this.allLanguages[lang] || lang);
+        this.$set(this.addLanguage, lang, this.allLanguages[lang] || lang);
       }
     }
   },
   methods: {
-    capitalize(text) {
+    capitalize(text) { //capitalize the first letter
       if (!text) return "";
       return text.charAt(0).toUpperCase() + text.slice(1);
     },
-    toggleDropdown() {
+    toggleDropdown() {// Toggle dropdown menu visibility
       this.dropdownOpen = !this.dropdownOpen;
     },
-    addLanguage(lang) {
-      if (!this.word[lang]) {
-        this.$set(this.word, lang, "");
-        this.$set(this.additionalLanguages, lang, this.allLanguages[lang]);
+    addLanguage(lang) {// Add a new language to the form
+      if (!this.word[lang]) {//check if already have
+        this.$set(this.word, lang, "");// Initialize the language with an empty string
+        this.$set(this.addLanguage, lang, this.allLanguages[lang]);// Add to addLanguages
       }
     },
     removeLanguage(lang) {
-      this.$delete(this.word, lang);
-      this.$delete(this.additionalLanguages, lang);
+      this.$delete(this.word, lang);// Remove from word object
+      this.$delete(this.addLanguages, lang);// Remove addLang
     },
     onSubmit() {
-      this.errorsPresent = Object.entries(this.word).some(
+      this.errorsPresent = Object.entries(this.word).some(// Validate required fields
         ([lang, value]) =>
-          value === "" &&
-          (lang === "english" || lang === "german" || lang === "vietnamese" || lang in this.additionalLanguages)
+          value === "" && // Check for empty value
+          (lang === "english" || lang === "german" || lang === "vietnamese" || lang in this.addLanguages)
       );
-
+      // If validation passes, emit the data  
       if (!this.errorsPresent) {
         const languageWord = {
           languages: { ...this.word } // This nests all fields inside a `languages` key
         };
-        this.$emit("createOrUpdate", languageWord);
+        this.$emit("createOrUpdate", languageWord);// Emit the form data
       }
     }
   }
@@ -151,10 +139,10 @@ export default {
 .error {
   color: red;
 }
-.ui.dropdown .menu {
+.ui.dropdown .menu {/* Dropdown menu styling */
   display: block;
   position: absolute;
-  z-index: 1000;
+  z-index: 1000;/* Ensure it appears above other elements */
   background: white;
   border: 1px solid #ccc;
   width: 100%;
