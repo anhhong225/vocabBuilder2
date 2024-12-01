@@ -47,7 +47,7 @@
         };
         return flags[lang] || 'world'; // Default to a generic icon if flag not found
       },
-      capitalize(word) {
+      capitalize(word) {//method to capital first letter
         return word.charAt(0).toUpperCase() + word.slice(1);
       }
     }
@@ -56,7 +56,7 @@
   
   <style scoped>
   .actions a {
-    display: block;
+    display: block; /**make as a block */
     text-decoration: underline;
     margin: 20px 10px;
   }

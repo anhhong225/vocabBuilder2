@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      randWords: [...this.words.slice().sort(() => 0.5 - Math.random())],
+      randWords: [...this.words.sort(() => 0.5 - Math.random())],
       incorrectGuesses: [],
       result: '',
       resultClass: '',
@@ -57,19 +57,16 @@ export default {
   },
   methods: {
     onSubmit: function() {
-      if (this.english.toLowerCase() === this.currWord.english) {
+      if (this.english.toLowerCase() === this.currWord.english && this.vietnam.toLowerCase() === this.currWord.vietnam) {
         this.flash('Correct!', 'success', { timeout: 1000 });
         this.score += 1;
-      } 
-      else if (this.vietnam.toLowerCase() === this.currWord.vietnam) {
-        this.flash('Correct!', 'success', { timeout: 1000 });
-        this.score += 1;
-      }else {
+      } else {
         this.flash('Wrong!', 'error', { timeout: 1000 });
         this.incorrectGuesses.push(this.currWord.german);
       }
 
       this.english = '';
+      this.vietnam = '';
       this.randWords.shift();
 
       if (this.randWords.length === 0) {
