@@ -7,7 +7,7 @@
         <div class="ui label">
           <i class="germany flag"></i> German
         </div>
-        <input type="text" readonly :disabled="testOver" :value="currWord.german"/>
+        <input type="text" readonly :disabled="testOver" :value="currWord.languages && currWord.languages.german"/>
       </div>
       <div class="ui labeled input fluid">
         <div class="ui label">
@@ -52,23 +52,26 @@ export default {
   },
   computed: {
     currWord: function() {
+      console.log(this.randWords, this.words)
       return this.randWords.length ? this.randWords[0] : '';
     }
   },
   methods: {
     onSubmit: function() {
-      if (this.english.toLowerCase() === this.currWord.english && this.vietnam.toLowerCase() === this.currWord.vietnam) {
+      if(this.testOver===true) return;
+      if (this.english.toLowerCase() === this.currWord.languages.english.toLowerCase() && this.vietnam.toLowerCase() === this.currWord.languages.vietnam.toLowerCase()) {
         this.flash('Correct!', 'success', { timeout: 1000 });
         this.score += 1;
       } else {
         this.flash('Wrong!', 'error', { timeout: 1000 });
-        this.incorrectGuesses.push(this.currWord.german);
+        this.incorrectGuesses.push(this.currWord.languages.german);
+        console.log(this.incorrectGuesses);
       }
 
       this.english = '';
       this.vietnam = '';
       this.randWords.shift();
-
+      console.log(this.randWords.length)
       if (this.randWords.length === 0) {
         this.testOver = true;
         this.displayResults();

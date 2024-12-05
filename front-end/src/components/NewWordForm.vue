@@ -25,7 +25,7 @@
 
     <!-- Dynamically Added Language Fields -->
     <div
-      class="ui labeled input fluid" v-for="(label, lang) in additionalLanguages"
+      class="ui labeled input fluid" v-for="(label, lang) in addLanguages"
       :key="lang" style="position:relative;"> <!-- Loop through dynamically added languages -->
       <div class="ui label"><!-- Display flag-->
         <i :class="languageFlags[lang] + ' flag'"></i> {{ capitalize(label) }}
@@ -70,7 +70,7 @@ export default {
     return {
       errorsPresent: false,
       dropdownOpen: false, //tracking dropdown visibility
-      additionalLanguages: {}, // Store dynamically added languages
+      addLanguages: {}, // Store dynamically added languages
       allLanguages: {
         // All available languages
         spanish: "spanish",
@@ -78,7 +78,8 @@ export default {
         japanese: "japanese",
         korean: "korean",
         french: "french",
-        dutch: "dutch"
+        dutch: "dutch",
+        thailand: "thailand"
       },
       languageFlags: {
         // Flags for each language
@@ -87,15 +88,16 @@ export default {
         italian: "italy",
         japanese: "japan",
         korean: "south korea",
-        dutch: "netherlands"
+        dutch: "netherlands",
+        thailand: "thailand"
       }
     };
   },
   mounted() {
-    // Populate additionalLanguages dynamically from the word prop
+    // Populate addLanguages dynamically from the word prop
     for (const lang in this.word) {
       if (!(lang === "english" || lang === "german" || lang === "vietnamese")) {
-        this.$set(this.addLanguage, lang, this.allLanguages[lang] || lang);
+        this.$set(this.addLanguages, lang, this.allLanguages[lang] || lang);
       }
     }
   },
@@ -110,7 +112,7 @@ export default {
     addLanguage(lang) {// Add a new language to the form
       if (!this.word[lang]) {//check if already have
         this.$set(this.word, lang, "");// Initialize the language with an empty string
-        this.$set(this.addLanguage, lang, this.allLanguages[lang]);// Add to addLanguages
+        this.$set(this.addLanguages, lang, this.allLanguages[lang]);// Add to addLanguages
       }
     },
     removeLanguage(lang) {
